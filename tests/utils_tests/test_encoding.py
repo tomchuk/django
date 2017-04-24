@@ -10,6 +10,7 @@ from django.utils.encoding import (
     uri_to_iri,
 )
 from django.utils.functional import SimpleLazyObject
+from django.utils.safestring import SafeBytes, SafeText
 from django.utils.translation import gettext_lazy
 
 
@@ -29,6 +30,10 @@ class TestEncodingUtils(SimpleTestCase):
     def test_force_text_lazy(self):
         s = SimpleLazyObject(lambda: 'x')
         self.assertTrue(type(force_text(s)), str)
+
+    def test_force_text_safe_bytes(self):
+        s = SafeBytes(b'')
+        self.assertIsInstance(force_text(s), SafeText)
 
     def test_force_text_DjangoUnicodeDecodeError(self):
         msg = (

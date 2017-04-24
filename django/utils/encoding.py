@@ -6,6 +6,7 @@ from urllib.parse import quote
 
 from django.utils import six
 from django.utils.functional import Promise
+from django.utils.safestring import SafeData, SafeText
 
 
 class DjangoUnicodeDecodeError(UnicodeDecodeError):
@@ -62,7 +63,10 @@ def force_text(s, encoding='utf-8', strings_only=False, errors='strict'):
         return s
     try:
         if isinstance(s, bytes):
-            s = str(s, encoding, errors)
+            if isinstance(s, SafeData):
+                s = SafeText(str(s, encoding, errors))
+            else:
+                s = str(s, encoding, errors)
         else:
             s = str(s)
     except UnicodeDecodeError as e:
