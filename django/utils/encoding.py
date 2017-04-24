@@ -8,6 +8,7 @@ from decimal import Decimal
 
 from django.utils import six
 from django.utils.functional import Promise
+from django.utils.safestring import SafeBytes
 from django.utils.six.moves.urllib.parse import quote, unquote
 
 if six.PY3:
@@ -82,7 +83,7 @@ def force_text(s, encoding='utf-8', strings_only=False, errors='strict'):
     if strings_only and is_protected_type(s):
         return s
     try:
-        if not isinstance(s, six.string_types):
+        if not isinstance(s, six.string_types + (SafeBytes,)):
             if six.PY3:
                 if isinstance(s, bytes):
                     s = six.text_type(s, encoding, errors)
