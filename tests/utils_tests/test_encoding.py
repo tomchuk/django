@@ -11,6 +11,7 @@ from django.utils.encoding import (
 )
 from django.utils.functional import SimpleLazyObject
 from django.utils.http import urlquote_plus
+from django.utils.safestring import SafeBytes, SafeText
 
 
 class TestEncodingUtils(unittest.TestCase):
@@ -46,6 +47,10 @@ class TestEncodingUtils(unittest.TestCase):
     def test_force_bytes_strings_only(self):
         today = datetime.date.today()
         self.assertEqual(force_bytes(today, strings_only=True), today)
+
+    def test_force_text_safe_bytes(self):
+        s = SafeBytes(b'')
+        self.assertIsInstance(force_text(s), SafeText)
 
     def test_smart_text(self):
         class Test:
